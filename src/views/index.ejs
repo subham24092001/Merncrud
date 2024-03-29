@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Portal</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script>
+    // Parse the URL to check for the 'alert' query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const alertType = urlParams.get('alert');
+  
+    // Display alert based on alertType
+    if(alertType){
+
+      if (alertType === 'update') {
+        alert('Task updated successfully!');
+        window.location.href = '/tasks';
+      } else if (alertType === 'delete') {
+        alert('Task deleted successfully!');
+        window.location.href = '/tasks';
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Tasks</h1>
+    <ul>
+      <% tasks.forEach(task => { %>
+        <li class="task-item <%= task.status.toLowerCase() %>">
+          <strong class="title">Title:</strong> <span class="titles"><%= task.title %><span><br>
+          <strong class="description">Description:</strong> <span class="descriptions"><%= task.description %></span><br>
+          <strong class="status">Status:</strong> <span class="statuss"><%= task.status %></span><br>
+          <!-- Display creation timestamp -->
+          <p class="timestamp">Created At: <%= task.createdAt.toLocaleString() %></p>
+          <!-- Display last update timestamp -->
+          <p class="timestamp">Last Updated At: <%= task.updatedAt.toLocaleString() %></p>
+
+          <!-- Update form -->
+          <form action="/tasks/<%= task._id %>/update" method="POST" class="update-task-form">
+            <label for="title" class="title">Title:</label><br>
+            <input type="text" id="title" name="title" value="<%= task.title %>" required><br>
+            <label for="description" class="description">Description:</label><br>
+            <input type="text" id="description" name="description" value="<%= task.description %>" required><br>
+            <label for="status" class="status">Status:</label><br>
+            <input type="text" id="status" name="status" value="<%= task.status %>" required><br>
+            <button type="submit">Update</button>
+          </form>
+
+          <!-- Delete form -->
+          <form action="/tasks/<%= task._id %>/delete" method="POST" class="delete-task-form">
+            <button type="submit">Delete</button>
+          </form>
+        </li>
+      <% }); %>
+    </ul>
+
+    <!-- Form for creating a new task -->
+    <div class="create-task-form">
+      <h2>Create Task</h2>
+      <form action="/tasks/create" method="POST">
+        <label for="title" class="title">Title:</label><br>
+        <input type="text" id="title" name="title" required><br>
+        <label for="description" class="description">Description:</label><br>
+        <input type="text" id="description" name="description" required><br>
+        <label for="status" class="status">Status:</label><br>
+        <input type="text" id="status" name="status" value="Pending" required><br>
+        <button type="submit">Create</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
